@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Destrave. Sua Mente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f5f3ef;
+      --card:#fbfaf8;
+      --text:#4c3128;
+      --muted:#8b7e78;
+      --line:#e8e2da;
+      --mint:#64A494;
+      --mint-deep:#4d8f80;
+      --mint-soft:#edf7f4;
+      --shadow:0 20px 40px rgba(94,85,77,.08);
+      --radius:28px;
+      --radius-sm:20px;
+      --container:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.85), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255,255,255,.75), transparent 35%),
+        var(--bg);
+      overflow-x:hidden;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{width:min(calc(100% - 28px), var(--container));margin:0 auto}
+
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background:rgba(245,243,239,.72);
+      border-bottom:1px solid rgba(232,226,218,.68);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .logo-slot{width:42px;height:42px;border-radius:14px;border:1px dashed rgba(100,164,148,.28);background:rgba(255,255,255,.55);display:grid;place-items:center;overflow:hidden;flex:0 0 42px}
+    .logo-slot img{width:100%;height:100%;object-fit:contain}
+    .brand-text{font-weight:800;letter-spacing:-.04em;white-space:nowrap}
+    .nav-links{display:none;position:absolute;left:14px;right:14px;top:72px;background:rgba(251,250,248,.98);padding:18px;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);flex-direction:column;align-items:flex-start;gap:16px;color:#8f827c;font-size:15px}
+    .nav-links.open{display:flex}
+    .nav-links a:hover{color:var(--text)}
+    .nav-cta{padding:12px 18px;border-radius:999px;background:#dff0ea;color:#356f5c;font-size:14px;font-weight:600;border:1px solid rgba(100,164,148,.28)}
+    .menu-btn{display:block;border:0;background:none;font-size:28px;color:var(--text);padding:0 2px}
+
+    .hero{position:relative;padding:26px 0 82px;overflow:hidden}
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:20px;align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:var(--mint-soft);color:var(--mint);font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(100,164,148,.15)}
+    .eyebrow::before{content:'';width:8px;height:8px;border-radius:999px;background:var(--mint)}
+    h1{font-size:clamp(42px,11vw,84px);line-height:.94;letter-spacing:-.07em;margin:18px 0 14px;max-width:760px}
+    h1 .accent,.section-title .accent{color:var(--mint)}
+    .subline{font-size:clamp(26px,6vw,48px);color:#9a8f89;letter-spacing:-.05em;margin-bottom:18px}
+    .hero p{font-size:17px;line-height:1.65;color:#8b7e78;max-width:520px;margin:0 0 28px}
+    .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px}
+    .primary-btn,.secondary-link,.wa-btn,.floating-chat{transition:transform .3s ease,opacity .3s ease,box-shadow .3s ease}
+    .primary-btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:58px;padding:0 28px;border-radius:999px;border:1.5px solid rgba(100,164,148,.42);
+      color:var(--mint-deep);background:linear-gradient(180deg,#f8fffb,#eff8f5);font-weight:700;
+      box-shadow:0 10px 24px rgba(100,164,148,.12), inset 0 -2px 10px rgba(255,255,255,.8);
+    }
+    .primary-btn:hover,.wa-btn:hover,.floating-chat:hover{transform:translateY(-2px)}
+    .secondary-link{color:#8a7d77;font-weight:600}
+    .bullets{display:flex;gap:18px;flex-wrap:wrap;color:#9a8f89;font-size:14px}
+    .bullets span::before{content:'●';color:var(--mint);font-size:10px;margin-right:10px;vertical-align:2px}
+
+    .hero-art{position:relative;min-height:280px}
+    .beam-wrap{position:absolute;inset:0 -40px 0 0;display:flex;align-items:center;justify-content:flex-start;pointer-events:none}
+    .beam{
+      width:min(110vw,760px);height:300px;border-radius:999px;
+      background:
+        radial-gradient(circle at 18% 50%, rgba(255,255,255,.95), transparent 20%),
+        linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(100,164,148,.08) 12%, rgba(100,164,148,.28) 35%, rgba(255,255,255,.18) 60%, rgba(255,255,255,0) 88%),
+        repeating-linear-gradient(90deg, rgba(100,164,148,.0) 0 16px, rgba(100,164,148,.13) 16px 18px, rgba(255,255,255,0) 18px 30px);
+      opacity:.95;
+      transform-origin:left center;
+      animation:beamPulse 6s ease-in-out infinite;
+      mask-image: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,.92) 18%, rgba(0,0,0,.95) 100%);
+      -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,.92) 18%, rgba(0,0,0,.95) 100%);
+    }
+    .beam::before,.beam::after{content:'';position:absolute;inset:0;border-radius:inherit}
+    .beam::before{background:radial-gradient(circle at 12% 50%, rgba(214,255,242,.82), transparent 18%);filter:blur(18px);animation:haloMove 8s ease-in-out infinite}
+    .beam::after{background:repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 22px, rgba(100,164,148,.16) 22px 23px, rgba(255,255,255,0) 23px 34px);opacity:.42}
+    .scroll-tip{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:#b1a5a0;font-size:10px;letter-spacing:.25em}
+    .mouse{width:24px;height:40px;border-radius:999px;border:1px solid rgba(100,164,148,.38);position:relative}
+    .mouse::before{content:'';position:absolute;left:50%;top:7px;transform:translateX(-50%);width:4px;height:8px;border-radius:999px;background:var(--mint);animation:wheel 2s ease-in-out infinite}
+
+    section{padding:52px 0}
+    .section-tag{color:#78b8a0;font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;margin-bottom:14px}
+    .section-title{font-size:clamp(38px,8vw,64px);line-height:.95;letter-spacing:-.06em;margin:0 0 18px}
+    .section-copy{color:#90837d;font-size:16px;line-height:1.65;max-width:760px;margin:0 0 34px}
+
+    .experts-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px}
+    .expert-card,.issue-card,.testimonial-card,.contact-card{background:rgba(255,255,255,.72);border:1px solid rgba(232,226,218,.95);box-shadow:var(--shadow)}
+    .expert-card{display:grid;grid-template-columns:1fr;align-items:end;padding:24px 24px 0;border-radius:var(--radius);overflow:hidden;min-height:auto}
+    .expert-photo{display:flex;align-items:flex-end;justify-content:center;min-height:320px}
+    .expert-photo img{width:min(100%,320px);height:auto;object-fit:contain;transform:scale(1.18);transform-origin:center bottom;filter:saturate(.92) contrast(1.02)}
+    .expert-card .info{padding-bottom:24px}
+    .expert-card h3{margin:0 0 6px;font-size:28px;letter-spacing:-.04em}
+    .expert-meta{font-size:12px;font-weight:700;color:#85bca6;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+    .expert-card p{margin:0;color:#8f837d;line-height:1.7;font-size:15px}
+
+    .issues-grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .issue-card{position:relative;border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr;cursor:pointer}
+    .issue-thumb{height:188px;overflow:hidden}
+    .issue-thumb img{width:100%;height:100%;object-fit:cover}
+    .issue-content{padding:20px 22px 22px;background:linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.95) 18%, rgba(255,255,255,1) 100%)}
+    .issue-head{display:flex;align-items:center;gap:14px;justify-content:space-between}
+    .issue-content h4{margin:0;font-size:24px;letter-spacing:-.05em;max-width:80%}
+    .issue-arrow{width:42px;height:42px;border-radius:999px;border:1px solid rgba(100,164,148,.24);display:grid;place-items:center;color:var(--mint);font-size:24px;flex:0 0 42px;background:var(--mint-soft);transition:transform .3s ease, background .3s ease}
+    .issue-card:hover .issue-arrow{transform:translateX(4px)}
+    .issue-card.active .issue-arrow{transform:rotate(90deg);background:#dff0ea}
+    .issue-desc{max-height:0;overflow:hidden;opacity:0;color:#8f837d;font-size:15px;line-height:1.65;transition:max-height .35s ease, opacity .35s ease, margin-top .35s ease}
+    .issue-card.active .issue-desc{max-height:180px;opacity:1;margin-top:14px}
+
+    .social-proof{padding-top:76px;padding-bottom:90px}
+    .testimonials-grid{display:grid;grid-template-columns:1fr;gap:18px}
+    .testimonial-card{padding:22px;border-radius:24px}
+    .quote-mark{color:var(--mint);font-size:30px;line-height:1;margin-bottom:10px}
+    .testimonial-text{color:#756964;font-size:15px;line-height:1.75;position:relative}
+    .testimonial-text.collapsed{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+    .testimonial-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;flex-wrap:wrap}
+    .testimonial-name{font-size:13px;font-weight:700;color:#84bca5;letter-spacing:.08em;text-transform:uppercase}
+    .expand-btn{border:0;background:transparent;color:var(--mint-deep);font-weight:700;cursor:pointer;padding:0}
+
+    .contact{padding:82px 0 110px}
+    .contact-grid{display:grid;grid-template-columns:1fr;gap:26px;align-items:center}
+    .checklist{display:grid;gap:12px;color:#8f837d;font-size:16px;margin-top:20px}
+    .check-item::before{content:'◉';color:var(--mint);font-size:13px;margin-right:12px}
+    .contact-card{padding:30px 22px;border-radius:28px;text-align:center}
+    .contact-icon{width:76px;height:76px;border-radius:50%;margin:0 auto 18px;background:#eef7f3;display:grid;place-items:center;color:var(--mint-deep);box-shadow:inset 0 0 0 1px rgba(100,164,148,.24)}
+    .contact-icon svg{width:34px;height:34px}
+    .contact-card h3{font-size:28px;letter-spacing:-.05em;margin:0 0 12px}
+    .contact-card p{margin:0 auto 24px;max-width:520px;color:#8f837d;line-height:1.7;font-size:16px}
+    .wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;width:min(100%,390px);min-height:62px;border-radius:999px;background:linear-gradient(180deg,#6fb7a8,#4d8f80);color:white;font-weight:700;box-shadow:0 16px 30px rgba(77,143,128,.28)}
+    .wa-btn svg{width:20px;height:20px}
+    .tiny{font-size:12px;color:#b1a5a0;margin-top:16px}
+
+    footer{padding:24px 0 30px;border-top:1px solid rgba(232,226,218,.8);color:#9c918c;font-size:13px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .footer-links{display:flex;gap:18px;flex-wrap:wrap}
+
+    .floating-chat{position:fixed;right:16px;bottom:16px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#6fb7a8,#4d8f80);color:white;box-shadow:0 18px 36px rgba(77,143,128,.32);z-index:60;animation:float 3.2s ease-in-out infinite}
+    .floating-chat svg{width:28px;height:28px}
+
+    .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease, transform .8s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    @keyframes beamPulse{0%,100%{transform:translateX(0) scaleX(1);opacity:.78}50%{transform:translateX(20px) scaleX(1.04);opacity:1}}
+    @keyframes haloMove{0%,100%{transform:translateX(-16px)}50%{transform:translateX(18px)}}
+    @keyframes wheel{0%{transform:translate(-50%,0);opacity:0}30%{opacity:1}100%{transform:translate(-50%,14px);opacity:0}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+    @media (min-width: 760px){
+      .container{width:min(calc(100% - 40px), var(--container))}
+      .nav-links{left:auto;right:auto;top:auto;position:static;display:flex!important;background:none;padding:0;border:0;box-shadow:none;flex-direction:row;align-items:center;gap:28px}
+      .menu-btn{display:none}
+      .nav-inner{padding:18px 0}
+      .logo-slot{width:48px;height:48px;flex-basis:48px}
+      .hero{padding:64px 0 120px;min-height:86vh;display:flex;align-items:center}
+      .hero-grid{grid-template-columns:minmax(0,560px) 1fr;gap:20px}
+      .hero-art{min-height:520px}
+      .beam-wrap{inset:-50px -220px -50px -60px;justify-content:center}
+      .beam{width:1100px;height:540px}
+      .experts-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+      .expert-card{grid-template-columns:220px 1fr;padding:28px;min-height:320px}
+      .expert-photo{min-height:100%;justify-content:flex-start}
+      .expert-photo img{width:200px;max-width:none}
+      .issues-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+      .issue-thumb{height:225px}
+      .issue-content h4{font-size:30px}
+      .testimonials-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .contact-grid{grid-template-columns:1.05fr .95fr;gap:34px}
+      .contact-card{padding:44px}
+      .contact-card h3{font-size:36px}
+      .floating-chat{right:22px;bottom:22px;width:64px;height:64px}
+    }
+
+    @media (min-width: 1100px){
+      .testimonials-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .testimonial-card:last-child{grid-column:1 / -1}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#inicio" class="brand">
+        <span class="logo-slot"><img src="assets/destrave.png" alt="Logo Destrave" onerror="this.style.opacity='0';this.parentElement.style.borderStyle='dashed'" /></span>
+        <span class="brand-text">Destrave.</span>
+      </a>
+      <button class="menu-btn" aria-label="Abrir menu" id="menuBtn">☰</button>
+      <div class="nav-links" id="navLinks">
+        <a href="#inicio">Início</a>
+        <a href="#quem-somos">Quem Somos</a>
+        <a href="#especialidades">Especialidades</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#contato">Contato</a>
+        <a href="https://wa.me/5581995670601" class="nav-cta" target="_blank" rel="noreferrer">Agendar Sessão</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="reveal visible">
+          <div class="eyebrow">Coletivo de Psicólogos</div>
+          <h1>Sua mente não precisa ser seu <span class="accent">bloqueio.</span></h1>
+          <div class="subline">Vamos destravar?</div>
+          <p>Um espaço seguro e moderno para você lidar com a ansiedade, sem julgamentos.</p>
+          <div class="cta-row">
+            <a href="https://wa.me/5581995670601" class="primary-btn" target="_blank" rel="noreferrer">Quero Destravar Agora</a>
+            <a href="#quem-somos" class="secondary-link">Saiba mais →</a>
+          </div>
+          <div class="bullets">
+            <span>CRP Ativo</span>
+            <span>Sigilo Absoluto</span>
+            <span>Online &amp; Presencial</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="beam-wrap">
+            <div class="beam"></div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-tip">
+        <div>SCROLL</div>
+        <div class="mouse"></div>
+      </div>
+    </section>
+
+    <section id="quem-somos">
+      <div class="container">
+        <div class="section-tag reveal">// Quem Somos</div>
+        <h2 class="section-title reveal">Um coletivo que <span class="accent">entende</span> você.</h2>
+        <p class="section-copy reveal">Somos psicólogos especialistas que falam a sua língua. Nada de termos complicados — aqui, a conversa é real, o acolhimento é genuíno e o objetivo é um só: te ajudar a destravar.</p>
+
+        <div class="experts-grid">
+          <article class="expert-card reveal">
+            <div class="expert-photo"><img src="assets/edvaldo.png" alt="Edvaldo Silva" /></div>
+            <div class="info">
+              <h3>Edvaldo Silva</h3>
+              <div class="expert-meta">CRP: 02/14758</div>
+              <p>Especialista em ansiedade, depressão, reestruturação de crenças e processos de autonomia. Abordagem acolhedora, estratégica e sem julgamentos.</p>
+            </div>
+          </article>
+          <article class="expert-card reveal">
+            <div class="expert-photo"><img src="assets/lucas.png" alt="Lucas Vieira" /></div>
+            <div class="info">
+              <h3>Lucas Vieira</h3>
+              <div class="expert-meta">CRP: 02/15179</div>
+              <p>Atendimento com foco em ansiedade, esgotamento, dependência digital e segurança nas decisões. Escuta próxima e linguagem acessível.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="especialidades">
+      <div class="container">
+        <div class="section-tag reveal">// Especialidades</div>
+        <h2 class="section-title reveal">O que te <span class="accent">trava</span> hoje?</h2>
+        <p class="section-copy reveal">Toque em cada tema para abrir uma descrição breve. A seta responde à interação e mostra mais contexto quando você clica.</p>
+
+        <div class="issues-grid">
+          <article class="issue-card reveal active" tabindex="0">
+            <div class="issue-thumb"><img src="assets/ansiedade.webp" alt="Imagem representando ansiedade" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Ansiedade</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Para quando a mente acelera demais, o corpo sente antes de tudo e até tarefas simples parecem pesadas.</div>
+            </div>
+          </article>
+          <article class="issue-card reveal" tabindex="0">
+            <div class="issue-thumb"><img src="assets/depressao.png" alt="Imagem representando depressão" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Depressão</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Acolhimento para fases de vazio, desânimo, culpa e perda de energia, com espaço seguro para reconstrução.</div>
+            </div>
+          </article>
+          <article class="issue-card reveal" tabindex="0">
+            <div class="issue-thumb"><img src="assets/dependencia-digital.webp" alt="Imagem representando dependência digital" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Dependência Digital</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Quando a tela ocupa o espaço do descanso, da presença e da clareza mental, afetando rotina e relações.</div>
+            </div>
+          </article>
+          <article class="issue-card reveal" tabindex="0">
+            <div class="issue-thumb"><img src="assets/sono.webp" alt="Imagem representando higiene do sono" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Higiene do Sono</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Estratégias para reorganizar rotina, reduzir ativação mental à noite e recuperar um sono que realmente repara.</div>
+            </div>
+          </article>
+          <article class="issue-card reveal" tabindex="0">
+            <div class="issue-thumb"><img src="assets/burnout.webp" alt="Imagem representando esgotamento e gestão de estresse" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Esgotamento e Gestão de Estresse (Burnout)</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Para quem sente sobrecarga constante, exaustão emocional e dificuldade de sustentar a própria rotina.</div>
+            </div>
+          </article>
+          <article class="issue-card reveal" tabindex="0">
+            <div class="issue-thumb"><img src="assets/autonomia.webp" alt="Imagem representando segurança nas decisões e autonomia" loading="lazy"></div>
+            <div class="issue-content">
+              <div class="issue-head"><h4>Segurança nas Decisões e Autonomia (Reestruturação de Crenças)</h4><span class="issue-arrow">›</span></div>
+              <div class="issue-desc">Trabalho terapêutico para fortalecer posicionamento, reduzir culpa e construir decisões com mais segurança.</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="social-proof" id="depoimentos">
+      <div class="container">
+        <div class="section-tag reveal">// Prova Social</div>
+        <h2 class="section-title reveal">Quem já <span class="accent">destravou</span></h2>
+        <p class="section-copy reveal">Depoimentos reais de quem deu o primeiro passo.</p>
+
+        <div class="testimonials-grid">
+          <article class="testimonial-card reveal">
+            <div class="quote-mark">“</div>
+            <div class="testimonial-text collapsed">Iniciei o processo terapêutico com uma demanda que, para mim, parecia muito distante de ter um desfecho onde eu pudesse ao menos me sentir mais confortável dentro daquele contexto.<br><br>O trabalho com o Edvaldo foi uma verdadeira virada de chave. Com calma, escuta e muita sensibilidade, fomos acessando e trabalhando espaços internos que eu nem sabia que existiam. O processo aconteceu no meu tempo, de forma respeitosa e segura.<br><br>Hoje me sinto acolhida, confortável e em um ambiente de confiança para continuar esse caminho. Tenho muita gratidão por esse trabalho e acredito que isso é uma missão na vida dele.”</div>
+            <div class="testimonial-footer">
+              <div class="testimonial-name">Cliente Cassia</div>
+              <button class="expand-btn">Ler mais</button>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <div class="quote-mark">“</div>
+            <div class="testimonial-text collapsed">Mentalmente destruído, não conseguia enxergar um palmo a minha frente, não conseguia me perdoar por erros cometidos e isso acabava com minha mente e ainda assim eu achava que terapia é coisa de maluco.<br><br>Hoje eu posso AFIRMAR, que existe a vida antes e pós terapia, tratei de cada detalhe de forma específica e tive a sorte de ter como terapeuta Edvaldo, ele me fez achar as forças e habilidades que nem eu sabia onde estava, a sua competência profissional é magnífica, graças a Deus, meu esforço e o trabalho dele, eu AFIRMO, que estou no auge psicológico e fisico, onde impacta em relacionamentos, trabalho e estudo.<br><br>Para mim a terapia é algo libertador, onde eu entendi que erros acontecem, mas saber lhe dar com eles e suas consequências nos torna super-humanos.”</div>
+            <div class="testimonial-footer">
+              <div class="testimonial-name">Cliente Daniel Vinícius</div>
+              <button class="expand-btn">Ler mais</button>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <div class="quote-mark">“</div>
+            <div class="testimonial-text collapsed">Sou um missionário na Ilha do Marajó, e minha expectativa para a terapia era de poder me abrir mais com as pessoas em que eu tenho confiança, saber distinguir quem são essas pessoas em minha vida, e com a terapia pude compreender que eu me fechei por conta de atitudes que amigos meus tiveram no passado, e me deixaram receoso de abrir minhas experiências com certas pessoas por medo de fofocas, também na terapia consegui ver que Deus me chamou pra realizar uma obra aqui nesse lugar, e que eu sou mais do que capaz de cumprir desafios que me entregam nas mãos, pois eu tinha muito problema com rejeição, em dar opinião e não ser ouvido, mas com as terapias eu fui melhorando isso em minha vida.<br><br>Eu super indico o psicólogo Edvaldo, a sessão de terapia é leve, te faz ver de outra forma as experiências que você teve na sua vida e aprender a ressignificá-las.”</div>
+            <div class="testimonial-footer">
+              <div class="testimonial-name">Cliente Lucas Freitas</div>
+              <button class="expand-btn">Ler mais</button>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <div class="quote-mark">“</div>
+            <div class="testimonial-text collapsed">Por muito tempo, eu criei uma barreira para me permitir buscar a terapia. Muito disso vinha de experiências ruins com alguns profissionais e também daquele velho preconceito de que terapia era “coisa de doido” (confesso… kkkkk.)<br><br>Ao mesmo tempo, eu estava vivendo um período intenso da vida empreendedora, e quem empreende sabe, não é fácil. Pressões, decisões, responsabilidades e cobranças internas o tempo todo.<br><br>Diante de tudo isso, eu já conhecia o Dr. Edvaldo. Um cara altamente sensacional, ético, profissional e absurdamente inteligente. Foi então que eu me permiti iniciar a terapia com ele, e foi exatamente aí que tudo mudou.<br><br>Minha visão sobre terapia mudou completamente. E reforço muito, não é só sobre fazer terapia, é sobre estar no lugar certo, com a pessoa certa, fazendo a coisa certa. E o Dr. Edvaldo é exatamente isso.<br><br>Cada sessão me levava a desbloquear gatilhos do passado que eu nem lembrava mais, e, muitas vezes, nem fazia ideia de como aquilo ainda refletia na minha vida adulta. Ele nunca me dizia o que eu tinha que fazer. Pelo contrário, sempre me mostrava que existem caminhos, existem escolhas, e que cada escolha gera uma consequência diferente. Isso muda tudo.<br><br>Teve um ponto extremamente impactante para mim, especialmente na vida profissional. Quando criança, eu sempre quis muito atender às expectativas da minha mãe, ser exatamente o que ela esperava de mim, para ter aceitação. Isso foi se estendendo para tudo, amigos, relações, decisões… sempre tentando agradar, evitar conflitos, não machucar ninguém.<br><br>Esse padrão refletia diretamente no meu posicionamento com meus clientes. Muitas vezes, o medo e a insegurança me impediam de ser mais firme, de me posicionar com clareza. E não é sobre gerar conflitos, é sobre saber quem você é e enfrentar as situações com maturidade.<br><br>A terapia me transformou nesse sentido. Passei a ter mais pulso firme, a me posicionar melhor em reuniões, a sustentar minhas decisões e, principalmente, a ter a certeza de que as escolhas são minhas, não algo que faço apenas para agradar ou evitar desconfortos. Isso mudou inclusive minha relação com minha mãe hoje.<br><br>O Dr. Edvaldo quebrou vários dos meus paradigmas. E, sinceramente, hoje eu me pergunto: por que eu não fiz terapia antes? kkkkk<br><br>O Dr. Edvaldo é esse ser iluminado que nos ajuda a iluminar nossas próprias vidas.”</div>
+            <div class="testimonial-footer">
+              <div class="testimonial-name">Cliente Nyll Fragoso</div>
+              <button class="expand-btn">Ler mais</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contato">
+      <div class="container contact-grid">
+        <div>
+          <div class="section-tag reveal">// Contato</div>
+          <h2 class="section-title reveal">Pronto pra dar o <span class="accent">primeiro passo?</span></h2>
+          <p class="section-copy reveal">Sem compromisso, sem julgamento. Uma conversa pra entender como podemos te ajudar. Fale direto com a gente pelo WhatsApp — é rápido, simples e seguro.</p>
+          <div class="checklist reveal">
+            <div class="check-item">Profissionais Registrados — CRP Ativo</div>
+            <div class="check-item">Sigilo ético absoluto garantido</div>
+            <div class="check-item">Resposta rápida pelo WhatsApp</div>
+          </div>
+        </div>
+
+        <article class="contact-card reveal">
+          <div class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 20C16.4183 20 20 16.6421 20 12.5C20 8.35786 16.4183 5 12 5C7.58172 5 4 8.35786 4 12.5C4 13.9479 4.43784 15.2999 5.1954 16.4444L4.5 20L8.19313 18.9965C9.35536 19.6404 10.7079 20 12 20Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Fale com a gente agora</h3>
+          <p>Clique abaixo e inicie uma conversa pelo WhatsApp. Estamos aqui para te ouvir, sem pressa e sem julgamentos.</p>
+          <a class="wa-btn" href="https://wa.me/5581995670601" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.11 17.02c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.62.14-.18.27-.71.88-.87 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.18-1.34-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.56.13-.13.27-.32.41-.48.14-.16.18-.27.27-.46.09-.18.05-.34-.02-.48-.07-.14-.62-1.5-.85-2.05-.22-.54-.45-.46-.62-.47h-.53c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29 0 1.34.98 2.64 1.11 2.82.14.18 1.92 3.02 4.74 4.11 2.82 1.09 2.82.73 3.33.68.5-.05 1.6-.66 1.83-1.29.23-.64.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32Z"/><path d="M27.03 15.49c0 6.08-4.95 11-11.06 11-1.94 0-3.75-.49-5.32-1.36L5 27l1.94-5.41a10.9 10.9 0 0 1-2.04-6.1c0-6.08 4.95-11 11.06-11 6.11 0 11.06 4.92 11.06 11Zm-11.06-9.2c-5.1 0-9.24 4.11-9.24 9.2 0 1.82.53 3.58 1.54 5.08l.24.36-1.15 3.19 3.29-1.08.34.2a9.27 9.27 0 0 0 4.98 1.45c5.1 0 9.24-4.11 9.24-9.2 0-5.09-4.14-9.2-9.24-9.2Z"/></svg>
+            Iniciar Atendimento
+          </a>
+          <div class="tiny">Ao entrar em contato, você concorda com nosso aviso ético e de privacidade.</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div class="brand">
+        <span class="logo-slot"><img src="assets/destrave.png" alt="Logo Destrave" onerror="this.style.opacity='0';this.parentElement.style.borderStyle='dashed'" /></span>
+        <span class="brand-text">Destrave Sua Mente</span>
+      </div>
+      <div class="footer-links">
+        <span>CRP Ativo</span>
+        <span>Sigilo Ético Absoluto</span>
+        <span>Atendimento Online &amp; Presencial</span>
+      </div>
+      <div>© 2026 Destrave Sua Mente</div>
+    </div>
+  </footer>
+
+  <a class="floating-chat" href="https://wa.me/5581995670601" target="_blank" rel="noreferrer" aria-label="Abrir WhatsApp">
+    <svg viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.11 17.02c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.62.14-.18.27-.71.88-.87 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.18-1.34-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.56.13-.13.27-.32.41-.48.14-.16.18-.27.27-.46.09-.18.05-.34-.02-.48-.07-.14-.62-1.5-.85-2.05-.22-.54-.45-.46-.62-.47h-.53c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29 0 1.34.98 2.64 1.11 2.82.14.18 1.92 3.02 4.74 4.11 2.82 1.09 2.82.73 3.33.68.5-.05 1.6-.66 1.83-1.29.23-.64.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32Z"/><path d="M27.03 15.49c0 6.08-4.95 11-11.06 11-1.94 0-3.75-.49-5.32-1.36L5 27l1.94-5.41a10.9 10.9 0 0 1-2.04-6.1c0-6.08 4.95-11 11.06-11 6.11 0 11.06 4.92 11.06 11Zm-11.06-9.2c-5.1 0-9.24 4.11-9.24 9.2 0 1.82.53 3.58 1.54 5.08l.24.36-1.15 3.19 3.29-1.08.34.2a9.27 9.27 0 0 0 4.98 1.45c5.1 0 9.24-4.11 9.24-9.2 0-5.09-4.14-9.2-9.24-9.2Z"/></svg>
+  </a>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    menuBtn?.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('open')));
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el, index) => {
+      el.style.transitionDelay = `${Math.min(index * 0.04, 0.28)}s`;
+      if (!el.classList.contains('visible')) observer.observe(el);
+    });
+
+    document.querySelectorAll('.issue-card').forEach((card) => {
+      const toggle = () => card.classList.toggle('active');
+      card.addEventListener('click', (e) => {
+        if (window.getSelection().toString()) return;
+        toggle();
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    document.querySelectorAll('.testimonial-card').forEach((card) => {
+      const text = card.querySelector('.testimonial-text');
+      const button = card.querySelector('.expand-btn');
+      if (!text || !button) return;
+      const needsButton = text.scrollHeight > text.clientHeight + 6;
+      if (!needsButton) {
+        button.style.display = 'none';
+        text.classList.remove('collapsed');
+        return;
+      }
+      button.addEventListener('click', () => {
+        const expanded = !text.classList.contains('collapsed');
+        text.classList.toggle('collapsed');
+        button.textContent = expanded ? 'Ler mais' : 'Ler menos';
+      });
+    });
+  </script>
+</body>
+</html>
